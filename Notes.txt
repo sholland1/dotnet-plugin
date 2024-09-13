@@ -1,0 +1,18 @@
+neovim dotnet plugin notes
+
+[x] choose nuget package(s) to update
+[x] choose nuget package(s) to remove
+[ ] add new nuget package(s)
+[ ] update all nuget packages command
+[ ] add reference(s)
+[ ] remove reference(s)
+[ ] add project
+[ ] add project(s) to sln
+[ ] nuget sources
+[ ] previews
+
+[ ] make cross platform (powershell, bash, cmd?)
+
+[x] maybe use :!powershell.exe -Command "& cmd1; cmd2; cmd3" instead of opening terminal window
+[x] improve package listing scripts
+
