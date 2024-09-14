@@ -8,12 +8,17 @@ local action_state = require("telescope.actions.state")
 local utils = require("dotnet-plugin.utils")
 local execute_commands = utils.exec_on_cmd_line
 
+local pick_projects = require("dotnet-plugin.project_picker")
+
 local function pick_reference_to_remove(opts, selection)
   opts = opts or {}
+  vim.print(selection)
+
+  local project = selection[1].value
 
   local list_reference_command = string.format(
     "dotnet list %s reference | tail -n +3 | sed 's/\\\\/\\//g'",
-    selection[1])
+    project)
 
   local handle = io.popen(list_reference_command)
   if handle == nil then
@@ -52,16 +57,16 @@ local function pick_reference_to_remove(opts, selection)
     attach_mappings = function(prompt_bufnr, map)
       actions.select_default:replace(function()
         local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        if vim.tbl_isempty(multi) then
-          multi = { action_state.get_selected_entry() }
+        local selections = picker:get_multi_selection()
+        if vim.tbl_isempty(selections) then
+          selections = { action_state.get_selected_entry() }
         end
 
         actions.close(prompt_bufnr)
 
         local commands = {}
-        table.insert(commands, "pushd " .. vim.fn.fnamemodify(selection[1], ":h"))
-        for _, entry in pairs(multi) do
+        table.insert(commands, "pushd " .. vim.fn.fnamemodify(project, ":h"))
+        for _, entry in pairs(selections) do
           table.insert(commands, "dotnet remove reference " .. entry.value)
         end
         table.insert(commands, "popd")
@@ -74,31 +79,5 @@ local function pick_reference_to_remove(opts, selection)
   }):find()
 end
 
-local function pick_project(opts, continuation)
-  opts = opts or {}
-
-  pickers.new(opts, {
-    prompt_title = "Choose a project",
-
-    finder = finders.new_table({
-      results = utils.get_projects(),
-    }),
-
-    sorter = conf.generic_sorter(opts),
-
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        actions.close(prompt_bufnr)
-        local selection = action_state.get_selected_entry()
-        if selection == nil then
-          return
-        end
-        continuation(opts, selection)
-      end)
-      return true
-    end,
-  }):find()
-end
-
-return function (opts) pick_project(opts, pick_reference_to_remove) end
+return function (opts) pick_projects(opts, pick_reference_to_remove) end
 

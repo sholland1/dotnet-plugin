@@ -7,35 +7,7 @@ local action_state = require("telescope.actions.state")
 
 local utils = require("dotnet-plugin.utils")
 local execute_commands = utils.exec_on_cmd_line
-
-local function pick_project(opts, continuation)
-  opts = opts or {}
-
-  pickers.new(opts, {
-    prompt_title = "Choose a project",
-
-    finder = finders.new_table({
-      results = utils.get_projects(),
-    }),
-
-    sorter = conf.generic_sorter(opts),
-
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(function()
-        local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        if vim.tbl_isempty(multi) then
-          multi = { action_state.get_selected_entry() }
-        end
-
-        actions.close(prompt_bufnr)
-
-        continuation(opts, multi)
-      end)
-      return true
-    end,
-  }):find()
-end
+local pick_projects = require("dotnet-plugin.project_picker")
 
 local function select_nuget_package(opts, continuation)
   opts = opts or {}
@@ -78,14 +50,14 @@ local function select_nuget_package(opts, continuation)
     attach_mappings = function (prompt_bufnr, _)
       actions.select_default:replace(function ()
         local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        if vim.tbl_isempty(multi) then
-          multi = { action_state.get_selected_entry() }
+        local selections = picker:get_multi_selection()
+        if vim.tbl_isempty(selections) then
+          selections = { action_state.get_selected_entry() }
         end
 
         actions.close(prompt_bufnr)
 
-        continuation(opts, multi)
+        continuation(opts, selections)
       end)
       return true
     end,
@@ -108,7 +80,7 @@ end
 
 return function (opts)
   select_nuget_package(opts,
-    function(opts0, packages) pick_project(opts0,
+    function(opts0, packages) pick_projects(opts0,
       function(_, projects) add_packages(packages, projects) end) end)
 end
 

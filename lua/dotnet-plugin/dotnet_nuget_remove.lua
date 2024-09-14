@@ -90,15 +90,15 @@ local dotnet_nuget = function(opts)
     attach_mappings = function (prompt_bufnr, _)
       actions.select_default:replace(function ()
         local picker = action_state.get_current_picker(prompt_bufnr)
-        local multi = picker:get_multi_selection()
-        if vim.tbl_isempty(multi) then
-          multi = { action_state.get_selected_entry() }
+        local selections = picker:get_multi_selection()
+        if vim.tbl_isempty(selections) then
+          selections = { action_state.get_selected_entry() }
         end
 
         actions.close(prompt_bufnr)
 
         local commands = {}
-        for _, entry in pairs(multi) do
+        for _, entry in pairs(selections) do
           local update_command = string.format(
             "dotnet remove %s package %s",
             entry.value.projectPath,
