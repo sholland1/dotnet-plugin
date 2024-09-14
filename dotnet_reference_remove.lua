@@ -50,7 +50,7 @@ local function get_projects()
   return relative_paths
 end
 
-local function pick_reference_to_remove(selection, opts)
+local function pick_reference_to_remove(opts, selection)
   opts = opts or {}
 
   local list_reference_command = string.format(
@@ -82,7 +82,7 @@ local function pick_reference_to_remove(selection, opts)
     return
   end
 
-  pickers.new(opts,{
+  pickers.new(opts, {
     prompt_title = "Choose references to remove",
 
     finder = finders.new_table({
@@ -119,7 +119,7 @@ end
 local function pick_project(opts, continuation)
   opts = opts or {}
 
-  pickers.new(opts,{
+  pickers.new(opts, {
     prompt_title = "Choose a project",
 
     finder = finders.new_table({
@@ -135,7 +135,7 @@ local function pick_project(opts, continuation)
         if selection == nil then
           return
         end
-        continuation(selection, opts)
+        continuation(opts, selection)
       end)
       return true
     end,
