@@ -43,6 +43,7 @@ local function pick_projects(opts, continuation)
     }),
 
     sorter = conf.generic_sorter(opts),
+    previewer = conf.file_previewer(opts),
 
     attach_mappings = function(prompt_bufnr, _)
       actions.select_default:replace(function()
