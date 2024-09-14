@@ -148,8 +148,9 @@ local function add_packages(packages, projects)
   execute_commands(commands)
 end
 
-local my_opts = require("telescope.themes").get_ivy()
-select_nuget_package(my_opts,
-  function(opts0, packages) pick_project(opts0,
-    function(_, projects) add_packages(packages, projects) end) end)
+return function (opts)
+  select_nuget_package(opts,
+    function(opts0, packages) pick_project(opts0,
+      function(_, projects) add_packages(packages, projects) end) end)
+end
 

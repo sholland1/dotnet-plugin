@@ -142,4 +142,5 @@ local function pick_project(opts, continuation)
   }):find()
 end
 
-pick_project(require("telescope.themes").get_ivy(), pick_reference_to_remove)
+return function (opts) pick_project(opts, pick_reference_to_remove) end
+

@@ -147,4 +147,5 @@ local dotnet_nuget = function(opts)
   }):find()
 end
 
-dotnet_nuget(require("telescope.themes").get_ivy())
+return dotnet_nuget
+
