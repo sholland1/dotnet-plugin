@@ -20,7 +20,6 @@ local function select_nuget_package(opts, continuation)
         local url = "https://azuresearch-usnc.nuget.org/autocomplete?q="
         local nuget_search_command = string.format("curl -s %s%s", url, prompt)
 
-
         local handle = io.popen(nuget_search_command)
         if handle == nil then
           print("Failed to execute shell command.")
