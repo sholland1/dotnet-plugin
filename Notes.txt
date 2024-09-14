@@ -2,12 +2,13 @@ neovim dotnet plugin notes
 
 [x] choose nuget package(s) to update
 [x] choose nuget package(s) to remove
-[ ] add new nuget package(s)
+[x] add new nuget package(s)
 [ ] update all nuget packages command
 [ ] add reference(s)
 [x] remove reference(s)
 [ ] add project
 [ ] add project(s) to sln
+[ ] remove project(s) from sln
 [ ] nuget sources
 [ ] previews
 
