@@ -5,16 +5,8 @@ local conf = require("telescope.config").values
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
-local execute_commands = require("dotnet-plugin.utils").exec_on_cmd_line
-
-local function get_projects()
-  local project_paths = vim.fn.glob(vim.fn.getcwd() .. "/**/*.[fc]sproj", false, true)
-  local relative_paths = {}
-  for _, path in ipairs(project_paths) do
-    table.insert(relative_paths, vim.fn.fnamemodify(path, ":~:."))
-  end
-  return relative_paths
-end
+local utils = require("dotnet-plugin.utils")
+local execute_commands = utils.exec_on_cmd_line
 
 local function pick_project(opts, continuation)
   opts = opts or {}
@@ -23,7 +15,7 @@ local function pick_project(opts, continuation)
     prompt_title = "Choose a project",
 
     finder = finders.new_table({
-      results = get_projects(),
+      results = utils.get_projects(),
     }),
 
     sorter = conf.generic_sorter(opts),

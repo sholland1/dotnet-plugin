@@ -6,7 +6,8 @@ local conf = require("telescope.config").values
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
-local execute_commands = require("dotnet-plugin.utils").exec_on_cmd_line
+local utils = require("dotnet-plugin.utils")
+local execute_commands = utils.exec_on_cmd_line
 
 local dotnet_nuget = function(opts)
   opts = opts or {}
