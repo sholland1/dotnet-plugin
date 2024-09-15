@@ -30,7 +30,15 @@ local function execute_in_term(commands)
   vim.cmd('normal G$')
 end
 
+local function format_number(num)
+  local formatted = tostring(num)
+  local k = #formatted % 3
+  if k == 0 then k = 3 end
+  return formatted:sub(1, k) .. formatted:sub(k+1):gsub("(...)", ",%1")
+end
+
 return {
   exec_on_cmd_line = exec_on_cmd_line,
   execute_in_term = execute_in_term,
+  format_number = format_number,
 }

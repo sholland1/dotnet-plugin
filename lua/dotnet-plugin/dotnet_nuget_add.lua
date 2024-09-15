@@ -1,5 +1,6 @@
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
+local previewers = require("telescope.previewers")
 local conf = require("telescope.config").values
 
 local actions = require("telescope.actions")
@@ -17,7 +18,7 @@ local function select_nuget_package(opts, continuation)
 
     finder = finders.new_dynamic({
       fn = function(prompt)
-        local url = "https://azuresearch-usnc.nuget.org/autocomplete?q="
+        local url = "https://azuresearch-usnc.nuget.org/query?q="
         local nuget_search_command = string.format("curl -s %s%s", url, prompt)
 
         local handle = io.popen(nuget_search_command)
@@ -38,13 +39,33 @@ local function select_nuget_package(opts, continuation)
       entry_maker = function (entry)
         return {
           value = entry,
-          display = entry,
-          ordinal = entry,
+          display = entry.id,
+          ordinal = entry.id,
         }
       end
     }),
 
     sorter = conf.generic_sorter(opts),
+
+    previewer = previewers.new_buffer_previewer({
+      title = "Nuget Package Preview",
+      define_preview = function (self, entry)
+        local bufLines = {
+          "Name: " .. (entry.value.id or ""),
+          "Author: " .. (entry.value.authors or {""})[1],
+          "Latest Version: " .. (entry.value.version or ""),
+          "Total Downloads: " .. utils.format_number(entry.value.totalDownloads),
+          "Description:"
+        }
+        local description_lines = vim.split(entry.value.description or "", "\n")
+        for _, line in ipairs(description_lines) do
+            table.insert(bufLines, line)
+        end
+
+        vim.api.nvim_buf_set_option(self.state.bufnr, 'wrap', true)
+        vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, bufLines)
+      end,
+    }),
 
     attach_mappings = function (prompt_bufnr, _)
       actions.select_default:replace(function ()
