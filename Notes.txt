@@ -8,7 +8,7 @@ neovim dotnet plugin notes
 [x] remove reference(s)
 [ ] add project
 [ ] add project(s) to sln
-[ ] remove project(s) from sln
+[x] remove project(s) from sln
 [ ] nuget sources
 [x] previews
 
