@@ -67,10 +67,14 @@ end
 local function pick_projects(opts, continuation)
   opts = opts or {}
 
+  local job_command = vim.fn.has('win32') and
+    {"powershell.exe", "-c", "dotnet new list --type=project | Select-Object -Skip 4"} or
+    {"sh", "-c", "dotnet new list --type=project | tail -n +5"}
+
   pickers.new(opts, {
     prompt_title = "New Project",
 
-    finder = finders.new_oneshot_job({"sh", "-c", "dotnet new list --type=project | tail -n +5"}, {
+    finder = finders.new_oneshot_job(job_command, {
       entry_maker = function(entry)
         local columns = {}
         for _, col in pairs(splitIntoColumns(entry)) do

@@ -15,9 +15,10 @@ local function pick_reference_to_remove(opts, selection)
 
   local project = selection[1].value
 
-  local list_reference_command = string.format(
-    "dotnet list %s reference | tail -n +3 | sed 's/\\\\/\\//g'",
-    project)
+  local list_reference_command = string.format("dotnet list %s reference", project) ..
+    (vim.fn.has('win32') and
+      " | Select-Object -Skip 2" or
+      " | tail -n +3 | sed 's/\\\\/\\//g'")
 
   local result = vim.fn.system(list_reference_command)
   if vim.v.shell_error ~= 0 then

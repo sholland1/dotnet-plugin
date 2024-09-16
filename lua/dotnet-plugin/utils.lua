@@ -16,15 +16,18 @@ local function open_bottom_term(height)
 end
 
 local function exec_on_cmd_line(commands)
-  local bash_command = table.concat(commands, " && ")
-  vim.cmd("!"..bash_command)
+  local separator = vim.fn.has('win32') and "; " or " && "
+  local multi_command = table.concat(commands, separator)
+  vim.cmd("!" .. multi_command)
 end
 
 local function execute_in_term(commands)
   open_bottom_term()
 
-  local bash_command = table.concat(commands, " && ")
-  local full_command = string.format('bash -c "%s"', bash_command)
+  local separator = vim.fn.has('win32') and "; " or " && "
+  local shell_command = vim.fn.has('win32') and "powershell.exe" or "sh"
+  local multi_command = table.concat(commands, separator)
+  local full_command = string.format('%s -c "%s"', shell_command, multi_command)
   vim.fn.termopen(full_command)
 
   vim.cmd('normal G$')
