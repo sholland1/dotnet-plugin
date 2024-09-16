@@ -52,7 +52,7 @@ local function select_nuget_package(opts, continuation)
       define_preview = function (self, entry)
         local bufLines = {
           "Name: " .. (entry.value.id or ""),
-          "Author: " .. (entry.value.authors or {""})[1],
+          "Author: " .. ((entry.value.authors or {""})[1] or ""),
           "Latest Version: " .. (entry.value.version or ""),
           "Total Downloads: " .. utils.format_number(entry.value.totalDownloads),
           "Description:"

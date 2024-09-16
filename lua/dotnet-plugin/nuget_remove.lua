@@ -9,7 +9,7 @@ local action_state = require("telescope.actions.state")
 local utils = require("dotnet-plugin.utils")
 local execute_commands = utils.exec_on_cmd_line
 
-local dotnet_nuget = function(opts)
+local remove_package = function(opts)
   opts = opts or {}
 
   local installed_packages_command = 'dotnet list package --format=json'
@@ -114,5 +114,5 @@ local dotnet_nuget = function(opts)
   }):find()
 end
 
-return dotnet_nuget
+return remove_package
 

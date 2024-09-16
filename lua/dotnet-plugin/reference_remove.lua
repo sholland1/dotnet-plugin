@@ -12,7 +12,6 @@ local pick_projects = require("dotnet-plugin.project_picker")
 
 local function pick_reference_to_remove(opts, selection)
   opts = opts or {}
-  vim.print(selection)
 
   local project = selection[1].value
 
@@ -30,9 +29,9 @@ local function pick_reference_to_remove(opts, selection)
   handle:close()
 
   if result:match("^Could not find") then
-      print("No references found.")
-      return
-    end
+    print("No references found.")
+    return
+  end
 
   local references = {}
   for line in result:gmatch("[^\r\n]+") do
@@ -54,7 +53,7 @@ local function pick_reference_to_remove(opts, selection)
 
     sorter = conf.generic_sorter(opts),
 
-    attach_mappings = function(prompt_bufnr, map)
+    attach_mappings = function(prompt_bufnr, _)
       actions.select_default:replace(function()
         local picker = action_state.get_current_picker(prompt_bufnr)
         local selections = picker:get_multi_selection()
