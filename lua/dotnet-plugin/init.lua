@@ -4,4 +4,5 @@ return {
   dotnet_nuget_update = require("dotnet-plugin.nuget_update"),
   dotnet_reference_remove = require("dotnet-plugin.reference_remove"),
   dotnet_sln_project_remove = require("dotnet-plugin.project_remove"),
+  dotnet_new_project = require("dotnet-plugin.new_project"),
 }

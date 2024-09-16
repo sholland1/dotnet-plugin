@@ -123,8 +123,7 @@ local function add_project(_, project)
   execute_commands(commands)
 end
 
-local opts = require("telescope.themes").get_ivy()
-pick_projects(opts, add_project)
+return function(opts) pick_projects(opts, add_project) end
 
 -- local strings = {
 --   "   Hello   world  how are you   ",
