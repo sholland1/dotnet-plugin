@@ -6,11 +6,12 @@ neovim dotnet plugin notes
 [ ] update all nuget packages command
 [ ] add reference(s)
 [x] remove reference(s)
-[ ] add project
+[x] new project
 [ ] add project(s) to sln
 [x] remove project(s) from sln
 [ ] nuget sources
 [x] previews
+[ ] list available commands
 
 [ ] make cross platform (powershell, bash, cmd?)
 
