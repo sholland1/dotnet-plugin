@@ -1,4 +1,5 @@
 return {
+  plugin_command_list = require("dotnet-plugin.plugin_command_list"),
   dotnet_nuget_add = require("dotnet-plugin.nuget_add"),
   dotnet_nuget_remove = require("dotnet-plugin.nuget_remove"),
   dotnet_nuget_update = require("dotnet-plugin.nuget_update"),

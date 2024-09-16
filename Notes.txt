@@ -11,7 +11,7 @@ neovim dotnet plugin notes
 [x] remove project(s) from sln
 [ ] nuget sources
 [x] previews
-[ ] list available commands
+[x] list available commands
 
 [x] make cross platform (powershell, bash, cmd?)
 
