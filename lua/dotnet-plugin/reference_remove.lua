@@ -19,14 +19,11 @@ local function pick_reference_to_remove(opts, selection)
     "dotnet list %s reference | tail -n +3 | sed 's/\\\\/\\//g'",
     project)
 
-  local handle = io.popen(list_reference_command)
-  if handle == nil then
+  local result = vim.fn.system(list_reference_command)
+  if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
   end
-
-  local result = handle:read("*a")
-  handle:close()
 
   if result:match("^Could not find") then
     print("No references found.")

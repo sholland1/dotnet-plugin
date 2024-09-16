@@ -14,14 +14,11 @@ local remove_package = function(opts)
 
   local installed_packages_command = 'dotnet list package --format=json'
 
-  local handle = io.popen(installed_packages_command)
-  if handle == nil then
+  local result = vim.fn.system(installed_packages_command)
+  if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
   end
-
-  local result = handle:read("*a")
-  handle:close()
 
   local json = vim.json.decode(result)
   local results = {}
