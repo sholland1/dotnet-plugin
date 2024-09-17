@@ -8,7 +8,7 @@ local action_state = require("telescope.actions.state")
 local utils = require("dotnet-plugin.utils")
 local execute_commands = utils.exec_on_cmd_line
 
-local pick_projects = require("dotnet-plugin.project_picker")
+local pick_folder = require("dotnet-plugin.folder_picker")
 
 local function pick_item_type(opts, continuation)
   opts = opts or {}
@@ -55,7 +55,7 @@ local function pick_item_type(opts, continuation)
   }):find()
 end
 
-local function add_item_to_project(_, item, project)
+local function add_item_to_folder(_, item, folder)
   local item_name = vim.fn.input("Enter item name: ")
   if item_name == "" then
     vim.print("Item name cannot be empty.")
@@ -63,7 +63,7 @@ local function add_item_to_project(_, item, project)
   end
 
   local commands = {
-    "pushd " .. vim.fn.fnamemodify(project.value, ":h"),
+    "pushd " .. folder.value,
     "dotnet new " .. item.value.short_name .. " -n " .. item_name,
     "popd",
   }
@@ -73,9 +73,9 @@ end
 return function(opts)
   pick_item_type(opts,
     function(opts0, item)
-      pick_projects(opts0,
-        function(opts1, projects)
-          add_item_to_project(opts1, item, projects[1])
+      pick_folder(opts0,
+        function(opts1, folder)
+          add_item_to_folder(opts1, item, folder)
         end)
     end)
 end
