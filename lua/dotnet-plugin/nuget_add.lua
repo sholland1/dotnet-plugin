@@ -18,9 +18,9 @@ local function select_nuget_package(opts, continuation)
 
     finder = finders.new_dynamic({
       fn = function(prompt)
-        local url = "https://azuresearch-usnc.nuget.org/query?q="
+        local url = "https://azuresearch-usnc.nuget.org/query\\?q\\="
         local nuget_search_command = string.format(
-          vim.fn.has('win32') and
+          vim.fn.has('win32') == 1 and
           "Invoke-RestMethod -Uri '%s%s' | ConvertTo-Json" or
           "curl -s %s%s",
           url, prompt)

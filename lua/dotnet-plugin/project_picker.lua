@@ -8,7 +8,7 @@ local action_state = require("telescope.actions.state")
 local function pick_projects(opts, continuation)
   opts = opts or {}
 
-  local job_command = vim.fn.has('win32') and
+  local job_command = vim.fn.has('win32') == 1 and
     {"powershell.exe", "-c", "dotnet sln list | Select-Object -Skip 2"} or
     {"sh", "-c", "dotnet sln list | tail -n +3"}
 

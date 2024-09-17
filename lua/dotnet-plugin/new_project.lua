@@ -67,7 +67,7 @@ end
 local function pick_projects(opts, continuation)
   opts = opts or {}
 
-  local job_command = vim.fn.has('win32') and
+  local job_command = vim.fn.has('win32') == 1 and
     {"powershell.exe", "-c", "dotnet new list --type=project | Select-Object -Skip 4"} or
     {"sh", "-c", "dotnet new list --type=project | tail -n +5"}
 
