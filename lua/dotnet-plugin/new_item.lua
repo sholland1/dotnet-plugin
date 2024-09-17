@@ -64,7 +64,7 @@ local function add_item_to_folder(_, item, folder)
 
   local commands = {
     "pushd " .. folder.value,
-    "dotnet new " .. item.value.short_name .. " -n " .. item_name,
+    string.format("dotnet new %s -n %s", item.value.short_name, item_name),
     "popd",
   }
   execute_commands(commands)

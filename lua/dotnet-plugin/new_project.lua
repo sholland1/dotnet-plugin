@@ -61,8 +61,8 @@ local function add_project(_, project)
   end
 
   local commands = {
-    "dotnet new " .. project.value.short_name .. " -o " .. project_name,
-    "dotnet sln add " .. project_name .. "/" .. project_name .. ".csproj",
+    string.format("dotnet new %s -o %s", project.value.short_name, project_name),
+    string.format("dotnet sln add %s/%s.csproj", project_name, project_name),
   }
   execute_commands(commands)
 end
