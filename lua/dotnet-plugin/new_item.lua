@@ -8,15 +8,17 @@ local action_state = require("telescope.actions.state")
 local utils = require("dotnet-plugin.utils")
 local execute_commands = utils.exec_on_cmd_line
 
-local function pick_project_type(opts, continuation)
+local pick_projects = require("dotnet-plugin.project_picker")
+
+local function pick_item_type(opts, continuation)
   opts = opts or {}
 
   local job_command = vim.fn.has('win32') == 1 and
-    {"powershell.exe", "-c", "dotnet new list --type=project | Select-Object -Skip 4"} or
-    {"sh", "-c", "dotnet new list --type=project | tail -n +5"}
+    {"powershell.exe", "-c", "dotnet new list --type=item | Select-Object -Skip 4"} or
+    {"sh", "-c", "dotnet new list --type=item | tail -n +5"}
 
   pickers.new(opts, {
-    prompt_title = "New Project",
+    prompt_title = "New Item",
 
     finder = finders.new_oneshot_job(job_command, {
       entry_maker = function(entry)
@@ -53,19 +55,28 @@ local function pick_project_type(opts, continuation)
   }):find()
 end
 
-local function add_project(_, project)
-  local project_name = vim.fn.input("Enter project name: ")
-  if project_name == "" then
-    vim.print("Project name cannot be empty.")
+local function add_item_to_project(_, item, project)
+  local item_name = vim.fn.input("Enter item name: ")
+  if item_name == "" then
+    vim.print("Item name cannot be empty.")
     return
   end
 
   local commands = {
-    "dotnet new " .. project.value.short_name .. " -o " .. project_name,
-    "dotnet sln add " .. project_name .. "/" .. project_name .. ".csproj",
+    "pushd " .. vim.fn.fnamemodify(project.value, ":h"),
+    "dotnet new " .. item.value.short_name .. " -n " .. item_name,
+    "popd",
   }
   execute_commands(commands)
 end
 
-return function(opts) pick_project_type(opts, add_project) end
+return function(opts)
+  pick_item_type(opts,
+    function(opts0, item)
+      pick_projects(opts0,
+        function(opts1, projects)
+          add_item_to_project(opts1, item, projects[1])
+        end)
+    end)
+end
 
