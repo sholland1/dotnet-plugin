@@ -62,11 +62,9 @@ local function pick_reference_to_remove(opts, selection)
         actions.close(prompt_bufnr)
 
         local commands = {}
-        table.insert(commands, "pushd " .. vim.fn.fnamemodify(project, ":h"))
         for _, entry in pairs(selections) do
-          table.insert(commands, "dotnet remove reference " .. entry.value)
+          table.insert(commands, string.format("dotnet remove %s reference %s", project, entry.value))
         end
-        table.insert(commands, "popd")
         table.insert(commands, "dotnet restore")
 
         execute_commands(commands)
