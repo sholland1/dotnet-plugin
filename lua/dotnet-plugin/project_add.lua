@@ -23,7 +23,7 @@ local function pick_missing_projects(opts, continuation)
 
   local all_projects_command = vim.fn.has('win32') == 1 and
     "Get-ChildItem -Filter *.csproj -Recurse | ForEach-Object { Resolve-Path -Relative $_.FullName }" or
-    "git ls-files | rg \\.csproj$"
+    "find . -name '*.csproj' -type f | sed 's|^./||'"
 
   local all_projects = vim.fn.system(all_projects_command)
   if vim.v.shell_error ~= 0 then
