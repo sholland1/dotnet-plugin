@@ -26,12 +26,12 @@ local function pick_reference_to_add(opts, selection)
     return
   end
 
-  local all_projects_command = "dotnet sln list" ..
+  local existing_projects_command = "dotnet sln list" ..
     (vim.fn.has('win32') == 1 and
       " | Select-Object -Skip 2" or
       " | tail -n +3")
 
-  local all_projects = vim.fn.system(all_projects_command)
+  local existing_projects = vim.fn.system(existing_projects_command)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
@@ -46,7 +46,7 @@ local function pick_reference_to_add(opts, selection)
   existing_references_set[temp] = true
 
   local unreferenced_projects = {}
-  for proj in all_projects:gmatch("[^\r\n]+") do
+  for proj in existing_projects:gmatch("[^\r\n]+") do
     if not existing_references_set[vim.fn.fnamemodify(proj, ":p")] then
       table.insert(unreferenced_projects, proj)
     end
