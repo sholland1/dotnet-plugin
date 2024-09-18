@@ -4,7 +4,7 @@ neovim dotnet plugin notes
 [x] choose nuget package(s) to remove
 [x] add new nuget package(s)
 [ ] update all nuget packages command
-[ ] add reference(s)
+[x] add reference(s)
 [x] remove reference(s)
 [x] new project
 [x] new file
