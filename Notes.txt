@@ -13,7 +13,13 @@ neovim dotnet plugin notes
 [ ] nuget sources
 [x] previews
 [x] list available commands
-[ ] choose nuget package version
+[ ] add package, choose version
+[ ] update single package, choose version
+[ ] new project, choose target framework
+[ ] new project, choose language
+[ ] option to choose which shell to use
+[ ] display list of commands better in Telescope
+[ ] handle fsproj and vbproj
 
 [x] make cross platform (powershell, bash, cmd?)
 
