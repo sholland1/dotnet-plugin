@@ -19,7 +19,7 @@ neovim dotnet plugin notes
 [ ] new project, choose language
 [x] allow removing references from all projects at once
 [ ] option to choose which shell to use
-[ ] display list of commands better in Telescope
+[x] display list of commands better in Telescope
 [ ] handle fsproj and vbproj
 
 [x] make cross platform (powershell, bash, cmd?)
