@@ -14,11 +14,12 @@ local function pick_reference_to_add(opts, selection)
   local project = selection[1].value
 
   local existing_references_command =
-    vim.fn.has('win32') == 1 and
-      string.format("cd %s; (dotnet list %s reference | Select-Object -Skip 2 | ForEach-Object { Resolve-Path $_ }).Path",
-        vim.fn.fnamemodify(project, ":h"), vim.fn.fnamemodify(project, ":t")) or
-      string.format("cd %s && dotnet list %s reference | tail -n +3 | sed 's/\\\\/\\//g' | xargs -r realpath",
-        vim.fn.fnamemodify(project, ":h"), vim.fn.fnamemodify(project, ":t"))
+    string.format(
+      vim.fn.has('win32') == 1 and
+        "cd %s; (dotnet list %s reference | Select-Object -Skip 2 | ForEach-Object { Resolve-Path $_ }).Path" or
+        "cd %s && dotnet list %s reference | tail -n +3 | sed 's/\\\\/\\//g' | xargs -r realpath",
+      vim.fn.fnamemodify(project, ":h"),
+      vim.fn.fnamemodify(project, ":t"))
 
   local existing_references = vim.fn.system(existing_references_command)
   if vim.v.shell_error ~= 0 then
