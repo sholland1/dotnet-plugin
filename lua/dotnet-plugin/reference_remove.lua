@@ -1,4 +1,5 @@
 local pickers = require("telescope.pickers")
+local entry_display = require("telescope.pickers.entry_display")
 local finders = require("telescope.finders")
 local conf = require("telescope.config").values
 
@@ -8,33 +9,52 @@ local action_state = require("telescope.actions.state")
 local utils = require("dotnet-plugin.utils")
 local execute_commands = utils.exec_on_cmd_line
 
-local pick_projects = require("dotnet-plugin.project_picker")
-
-local function pick_reference_to_remove(opts, selection)
+local function pick_reference_to_remove(opts)
   opts = opts or {}
 
-  local project = selection[1].value
-
-  local list_reference_command = string.format("dotnet list %s reference", project) ..
+  local projects_command = "dotnet sln list" ..
     (vim.fn.has('win32') == 1 and
       " | Select-Object -Skip 2" or
       " | tail -n +3 | sed 's/\\\\/\\//g'")
 
-  local result = vim.fn.system(list_reference_command)
+  local result0 = vim.fn.system(projects_command)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
   end
 
-  if result:match("^Could not find") then
-    print("No references found.")
+  if result0:match("^Could not find") then
+    print("No projects found.")
     return
   end
 
   local references = {}
-  for line in result:gmatch("[^\r\n]+") do
-    local path = line:match("^%s*(.-)%s*$")
-    table.insert(references, path)
+  for project in result0:gmatch("[^\r\n]+") do
+    local list_reference_command = string.format("dotnet list %s reference", project) ..
+      (vim.fn.has('win32') == 1 and
+        " | Select-Object -Skip 2" or
+        " | tail -n +3 | sed 's/\\\\/\\//g'")
+
+    local result1 = vim.fn.system(list_reference_command)
+    if vim.v.shell_error ~= 0 then
+      print("Failed to execute shell command.")
+      goto continue
+    end
+
+    if result1:match("^Could not find") then
+      print("No references found.")
+      goto continue
+    end
+
+    for line in result1:gmatch("[^\r\n]+") do
+      local reference = line:match("^%s*(.-)%s*$")
+      table.insert(references, {
+        project = project,
+        reference = reference,
+      })
+    end
+
+    ::continue::
   end
 
   if not references or #references == 0 then
@@ -42,11 +62,41 @@ local function pick_reference_to_remove(opts, selection)
     return
   end
 
+  -- Calculate max widths for each property
+  local max_widths = {
+    project = 0,
+    reference = 0,
+  }
+  for _, entry in ipairs(references) do
+    max_widths.project = math.max(max_widths.project, #entry.project)
+    max_widths.reference = math.max(max_widths.reference, #entry.reference)
+  end
+
+  local displayer = entry_display.create({
+    separator = " ",
+    items = {
+      { width = max_widths.project },
+      { width = max_widths.reference },
+    },
+  })
+
   pickers.new(opts, {
     prompt_title = "Choose references to remove",
 
     finder = finders.new_table({
       results = references,
+      entry_maker = function(entry)
+        return {
+          value = entry,
+          display = function (ntry)
+            return displayer({
+              ntry.value.project,
+              ntry.value.reference,
+            })
+          end,
+          ordinal = entry.project .. '|' .. entry.reference,
+        }
+      end,
     }),
 
     sorter = conf.generic_sorter(opts),
@@ -63,7 +113,7 @@ local function pick_reference_to_remove(opts, selection)
 
         local commands = {}
         for _, entry in pairs(selections) do
-          table.insert(commands, string.format("dotnet remove %s reference %s", project, entry.value))
+          table.insert(commands, string.format("dotnet remove %s reference %s", entry.value.project, entry.value.reference))
         end
         table.insert(commands, "dotnet restore")
 
@@ -74,5 +124,5 @@ local function pick_reference_to_remove(opts, selection)
   }):find()
 end
 
-return function (opts) pick_projects(opts, pick_reference_to_remove) end
+return pick_reference_to_remove
 
