@@ -17,6 +17,7 @@ neovim dotnet plugin notes
 [ ] update single package, choose version
 [ ] new project, choose target framework
 [ ] new project, choose language
+[ ] allow removing references from all projects at once
 [ ] option to choose which shell to use
 [ ] display list of commands better in Telescope
 [ ] handle fsproj and vbproj
