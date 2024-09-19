@@ -7,14 +7,12 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local utils = require("dotnet-plugin.utils")
-local execute_commands = utils.exec_on_cmd_line
 
 local remove_package = function(opts)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   opts = opts or {}
 
-  local installed_packages_command = 'dotnet list package --format=json'
-
-  local result = vim.fn.system(installed_packages_command)
+  local result = vim.fn.system(shell_cmds.installed_packages)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
@@ -96,15 +94,14 @@ local remove_package = function(opts)
 
         local commands = {}
         for _, entry in pairs(selections) do
-          local update_command = string.format(
-            "dotnet remove %s package %s",
+          local remove_command = shell_cmds.remove_package(
             entry.value.projectPath,
             entry.value.id)
-          table.insert(commands, update_command)
+          table.insert(commands, remove_command)
         end
-        table.insert(commands, "dotnet restore")
+        table.insert(commands, shell_cmds.restore)
 
-        execute_commands(commands)
+        utils.execute_commands(commands)
       end)
       return true
     end,

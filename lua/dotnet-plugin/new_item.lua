@@ -6,21 +6,17 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local utils = require("dotnet-plugin.utils")
-local execute_commands = utils.exec_on_cmd_line
 
 local pick_folder = require("dotnet-plugin.folder_picker")
 
 local function pick_item_type(opts, continuation)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   opts = opts or {}
-
-  local job_command = vim.fn.has('win32') == 1 and
-    {"powershell.exe", "-c", "dotnet new list --type=item | Select-Object -Skip 4"} or
-    {"sh", "-c", "dotnet new list --type=item | tail -n +5"}
 
   pickers.new(opts, {
     prompt_title = "New Item",
 
-    finder = finders.new_oneshot_job(job_command, {
+    finder = finders.new_oneshot_job(shell_cmds.list_item, {
       entry_maker = function(entry)
         local columns = {}
         for _, col in pairs(utils.split_into_columns(entry)) do
@@ -62,12 +58,13 @@ local function add_item_to_folder(_, item, folder)
     return
   end
 
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   local commands = {
-    "pushd " .. folder.value,
-    string.format("dotnet new %s -n %s", item.value.short_name, item_name),
-    "popd",
+    shell_cmds.pushd(folder.value),
+    shell_cmds.add_new_item(item.value.short_name, item_name),
+    shell_cmds.popd,
   }
-  execute_commands(commands)
+  utils.execute_commands(commands)
 end
 
 return function(opts)

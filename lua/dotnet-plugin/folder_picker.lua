@@ -6,16 +6,13 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local function pick_folder(opts, continuation)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   opts = opts or {}
-
-  local job_command = vim.fn.has('win32') == 1 and
-      {"powershell.exe", "-c", "git ls-files | ForEach-Object { Split-Path $_ -Parent } | Sort-Object -Unique"} or
-      {"sh", "-c", "git ls-files | xargs -n1 dirname | sort -u"}
 
   pickers.new(opts, {
     prompt_title = "Folders",
 
-    finder = finders.new_oneshot_job(job_command, {}),
+    finder = finders.new_oneshot_job(shell_cmds.list_folders, {}),
 
     sorter = conf.generic_sorter(opts),
     previewer = conf.file_previewer(opts),

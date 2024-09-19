@@ -7,17 +7,13 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local utils = require("dotnet-plugin.utils")
-local execute_commands = utils.exec_on_cmd_line
 
 local function pick_reference_to_remove(opts)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
+
   opts = opts or {}
 
-  local projects_command = "dotnet sln list" ..
-    (vim.fn.has('win32') == 1 and
-      " | Select-Object -Skip 2" or
-      " | tail -n +3 | sed 's/\\\\/\\//g'")
-
-  local result0 = vim.fn.system(projects_command)
+  local result0 = vim.fn.system(shell_cmds.projects)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
@@ -30,12 +26,7 @@ local function pick_reference_to_remove(opts)
 
   local references = {}
   for project in result0:gmatch("[^\r\n]+") do
-    local list_reference_command = string.format("dotnet list %s reference", project) ..
-      (vim.fn.has('win32') == 1 and
-        " | Select-Object -Skip 2" or
-        " | tail -n +3 | sed 's/\\\\/\\//g'")
-
-    local result1 = vim.fn.system(list_reference_command)
+    local result1 = vim.fn.system(shell_cmds.references(project))
     if vim.v.shell_error ~= 0 then
       print("Failed to execute shell command.")
       goto continue
@@ -113,11 +104,11 @@ local function pick_reference_to_remove(opts)
 
         local commands = {}
         for _, entry in pairs(selections) do
-          table.insert(commands, string.format("dotnet remove %s reference %s", entry.value.project, entry.value.reference))
+          table.insert(commands, shell_cmds.remove_reference(entry.value.project, entry.value.reference))
         end
-        table.insert(commands, "dotnet restore")
+        table.insert(commands, shell_cmds.restore)
 
-        execute_commands(commands)
+        utils.execute_commands(commands)
       end)
       return true
     end,

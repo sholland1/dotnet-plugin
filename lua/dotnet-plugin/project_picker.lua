@@ -6,16 +6,13 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local function pick_projects(opts, continuation)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   opts = opts or {}
-
-  local job_command = vim.fn.has('win32') == 1 and
-    {"powershell.exe", "-c", "dotnet sln list | Select-Object -Skip 2"} or
-    {"sh", "-c", "dotnet sln list | tail -n +3"}
 
   pickers.new(opts, {
     prompt_title = "Projects",
 
-    finder = finders.new_oneshot_job(job_command, {}),
+    finder = finders.new_oneshot_job(shell_cmds.projects2, {}),
 
     sorter = conf.generic_sorter(opts),
     previewer = conf.file_previewer(opts),

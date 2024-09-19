@@ -7,10 +7,10 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local utils = require("dotnet-plugin.utils")
-local execute_commands = utils.exec_on_cmd_line
 local pick_projects = require("dotnet-plugin.project_picker")
 
 local function select_nuget_package(opts, continuation)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   opts = opts or {}
 
   pickers.new(opts, {
@@ -18,14 +18,7 @@ local function select_nuget_package(opts, continuation)
 
     finder = finders.new_dynamic({
       fn = function(prompt)
-        local url = "https://azuresearch-usnc.nuget.org/query\\?q\\="
-        local nuget_search_command = string.format(
-          vim.fn.has('win32') == 1 and
-          "Invoke-RestMethod -Uri '%s%s' | ConvertTo-Json" or
-          "curl -s %s%s",
-          url, prompt)
-
-        local result = vim.fn.system(nuget_search_command)
+        local result = vim.fn.system(shell_cmds.nuget_api_query(prompt))
         if vim.v.shell_error ~= 0 then
           print("Failed to execute shell command.")
           return
@@ -86,17 +79,16 @@ local function select_nuget_package(opts, continuation)
 end
 
 local function add_packages(packages, projects)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   local commands = {}
   for _, pkg in pairs(packages or {}) do
     for _, proj in pairs(projects or {}) do
-      local update_command = string.format(
-        "dotnet add %s package %s",
-        proj.value, pkg.value.id)
-      table.insert(commands, update_command)
+      local add_command = shell_cmds.add_package(proj.value, pkg.value.id)
+      table.insert(commands, add_command)
     end
   end
 
-  execute_commands(commands)
+  utils.execute_commands(commands)
 end
 
 return function (opts)

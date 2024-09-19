@@ -16,7 +16,8 @@ local function open_bottom_term(height)
 end
 
 local function exec_on_cmd_line(commands)
-  local separator = vim.fn.has('win32') == 1 and "; " or " && "
+  local config = require("dotnet-plugin").config
+  local separator = config.shell == "powershell" and "; " or " && "
   local multi_command = table.concat(commands, separator)
   vim.cmd("!" .. multi_command)
 end
@@ -24,8 +25,9 @@ end
 local function execute_in_term(commands)
   open_bottom_term()
 
-  local separator = vim.fn.has('win32') == 1 and "; " or " && "
-  local shell_command = vim.fn.has('win32') == 1 and "powershell.exe" or "sh"
+  local config = require("dotnet-plugin").config
+  local separator = config.shell == "powershell" and "; " or " && "
+  local shell_command = config.shell == "powershell" and "powershell.exe" or "sh"
   local multi_command = table.concat(commands, separator)
   local full_command = string.format('%s -c "%s"', shell_command, multi_command)
   vim.fn.termopen(full_command)
@@ -138,8 +140,13 @@ end
 -- end
 
 return {
-  exec_on_cmd_line = exec_on_cmd_line,
-  execute_in_term = execute_in_term,
+  execute_commands = function(commands)
+    if require("dotnet-plugin").config.execute_with == "cmd_line" then
+      exec_on_cmd_line(commands)
+    else
+      execute_in_term(commands)
+    end
+  end,
   format_number = format_number,
   split_into_columns = split_into_columns,
 }

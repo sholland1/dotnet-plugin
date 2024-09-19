@@ -5,27 +5,20 @@ local conf = require("telescope.config").values
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
-local execute_commands  = require("dotnet-plugin.utils").exec_on_cmd_line
+local utils = require("dotnet-plugin.utils")
 
 local function pick_missing_projects(opts, continuation)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
+
   opts = opts or {}
 
-  local existing_projects_command = "dotnet sln list" ..
-    (vim.fn.has('win32') == 1 and
-      " | Select-Object -Skip 2 | ForEach-Object { '.\\' + $_ }" or
-      " | tail -n +3")
-
-  local existing_projects = vim.fn.system(existing_projects_command)
+  local existing_projects = vim.fn.system(shell_cmds.fixed_existing_projects)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
   end
 
-  local all_projects_command = vim.fn.has('win32') == 1 and
-    "Get-ChildItem -Filter *.csproj -Recurse | ForEach-Object { Resolve-Path -Relative $_.FullName }" or
-    "find . -name '*.csproj' -type f | sed 's|^./||'"
-
-  local all_projects = vim.fn.system(all_projects_command)
+  local all_projects = vim.fn.system(shell_cmds.all_projects)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
@@ -76,11 +69,12 @@ local function pick_missing_projects(opts, continuation)
 end
 
 local function add_projects(_, projects)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   local commands = {}
   for _, entry in pairs(projects) do
-    table.insert(commands, "dotnet sln add " .. entry.value)
+    table.insert(commands, shell_cmds.add_project(entry.value))
   end
-  execute_commands(commands)
+  utils.execute_commands(commands)
 end
 
 return function (opts) pick_missing_projects(opts, add_projects) end

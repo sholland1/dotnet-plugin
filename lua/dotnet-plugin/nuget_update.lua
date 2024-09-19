@@ -7,14 +7,12 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
 local utils = require("dotnet-plugin.utils")
-local execute_commands = utils.exec_on_cmd_line
 
 local update_package = function(opts)
+  local shell_cmds = require("dotnet-plugin.shell_cmds")
   opts = opts or {}
 
-  local outdated_packages_command = 'dotnet list package --outdated --format=json'
-
-  local result = vim.fn.system(outdated_packages_command)
+  local result = vim.fn.system(shell_cmds.outdated_packages)
   if vim.v.shell_error ~= 0 then
     print("Failed to execute shell command.")
     return
@@ -101,15 +99,14 @@ local update_package = function(opts)
 
         local commands = {}
         for _, entry in pairs(selections) do
-          local update_command = string.format(
-            "dotnet add %s package %s --version %s",
+          local update_command = shell_cmds.update_package(
             entry.value.projectPath,
             entry.value.id,
             entry.value.latestVersion)
           table.insert(commands, update_command)
         end
 
-        execute_commands(commands)
+        utils.execute_commands(commands)
       end)
       return true
     end,
