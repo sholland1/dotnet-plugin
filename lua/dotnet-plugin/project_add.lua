@@ -12,7 +12,7 @@ local function pick_missing_projects(opts, continuation)
 
   local existing_projects_command = "dotnet sln list" ..
     (vim.fn.has('win32') == 1 and
-      " | Select-Object -Skip 2" or
+      " | Select-Object -Skip 2 | ForEach-Object { '.\\' + $_ }" or
       " | tail -n +3")
 
   local existing_projects = vim.fn.system(existing_projects_command)
@@ -33,7 +33,7 @@ local function pick_missing_projects(opts, continuation)
 
   local existing_projects_set = {}
   for project in existing_projects:gmatch("[^\r\n]+") do
-    existing_projects_set['.\\' .. project] = true
+    existing_projects_set[project] = true
   end
 
   local missing_projects = {}
