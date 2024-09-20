@@ -28,3 +28,4 @@ neovim dotnet plugin notes
 [x] maybe use :!powershell.exe -Command "& cmd1; cmd2; cmd3" instead of opening terminal window
 [x] improve package listing scripts
 
+dotnet,cd,curl,dirname,find,git ls-files,popd,pushd,realpath,sed,sort,tail,xargs
