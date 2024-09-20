@@ -85,6 +85,13 @@ if vim.fn.has('win32') == 1 then
 end
 ```
 
+## Dependencies
+
+dotnet
+
+### Linux shell commands
+cd, curl, dirname, find, git ls-files, popd, pushd, realpath, sed, sort, tail, xargs
+
 ## Other .NET Neovim plugins
 
 - [MoaidHathot/dotnet.nvim](https://github.com/MoaidHathot/dotnet.nvim)
