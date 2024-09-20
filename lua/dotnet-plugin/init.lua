@@ -9,6 +9,7 @@ M.config = {}
 
 function M.setup(opts)
   M.config = vim.tbl_deep_extend("force", default_config, opts or {})
+  require('telescope').load_extension("dotnet-plugin")
 end
 
 M.plugin_command_list = require("dotnet-plugin.plugin_command_list")
