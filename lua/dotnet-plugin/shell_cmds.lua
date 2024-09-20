@@ -52,11 +52,11 @@ return {
   installed_packages = "dotnet list package --format=json",
 
   nuget_api_query = function(query)
-    local url = "https://azuresearch-usnc.nuget.org/query\\?q\\="
+    local url = "https://azuresearch-usnc.nuget.org/query"
     return string.format(
       config.shell == "powershell" and
-      "Invoke-RestMethod -Uri '%s%s' | ConvertTo-Json" or
-      "curl -s %s%s",
+      "Invoke-RestMethod -Uri '%s?q=%s' | ConvertTo-Json" or
+      "curl -s '%s\\?q\\=%s'",
       url, query)
   end,
 
