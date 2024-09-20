@@ -1,25 +1,26 @@
 # .NET Commands plugin
 
 ## Features
-[x] Nuget Packages - add, update, remove
-[x] Project References - add, remove
-[x] Projects in Solution - add, remove
-[x] Add new project from templates
-[x] Add new file from templates
-[x] Previews
-[x] List available commands
-[x] Powershell, sh
-[ ] Other nuget sources
-[ ] Update all nuget packages command
-[ ] Add package, choose version
-[ ] Update single package, choose version
-[ ] New project, choose target framework
-[ ] New project, choose language
-[ ] Handle fsproj and vbproj
+
+- [x] Nuget Packages - add, update, remove
+- [x] Project References - add, remove
+- [x] Projects in Solution - add, remove
+- [x] Add new project from templates
+- [x] Add new file from templates
+- [x] Previews
+- [x] List available commands
+- [x] Powershell, sh
+- [ ] Other nuget sources
+- [ ] Update all nuget packages command
+- [ ] Add package, choose version
+- [ ] Update single package, choose version
+- [ ] New project, choose target framework
+- [ ] New project, choose language
+- [ ] Handle fsproj and vbproj
 
 ## Installation
 
-### Lazy
+### lazy.nvim
 ```lua
   {
     -- required config
@@ -43,10 +44,11 @@
 
 | Name | Choices | Default | Description |
 |------|---------|---------|-------------|
-| shell | sh,powershell | sh | Specifies the shell to use for executing commands. |
-| execute_with | cmd_line,terminal | cmd_line | Determines how commands are executed. (command line or terminal window) |
+| shell | sh, powershell | sh | Specifies the shell to use for executing commands. |
+| execute_with | cmd_line, terminal | cmd_line | Determines how commands are executed. (command line or terminal window) |
 
 ## Exports
+
 The following lua functions are exported.
 
 ```lua
@@ -56,7 +58,7 @@ The following lua functions are exported.
   -- require the plugin
   local dotnet = require("dotnet-plugin")
 
-  -- run a command
+  -- call a function
   dotnet.plugin_command_list(telescope_opts)
   dotnet.dotnet_new_item(telescope_opts)
   dotnet.dotnet_new_project(telescope_opts)
