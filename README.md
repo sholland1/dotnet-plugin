@@ -11,7 +11,7 @@
 - [x] List available commands
 - [x] Powershell, sh
 - [ ] Other nuget sources
-- [ ] Update all nuget packages command
+- [x] Update all nuget packages command
 - [ ] Add package, choose version
 - [ ] Update single package, choose version
 - [ ] New project, choose target framework
@@ -65,6 +65,7 @@ The following lua functions are exported.
   dotnet.dotnet_nuget_add(telescope_opts)
   dotnet.dotnet_nuget_remove(telescope_opts)
   dotnet.dotnet_nuget_update(telescope_opts)
+  dotnet.dotnet_nuget_update_all()
   dotnet.dotnet_reference_add(telescope_opts)
   dotnet.dotnet_reference_remove(telescope_opts)
   dotnet.dotnet_sln_project_add(telescope_opts)

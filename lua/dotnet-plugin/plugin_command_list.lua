@@ -51,6 +51,13 @@ local commands = {
   },
 
   {
+    name = ".NET Update All Nuget Packages",
+    command = require("dotnet-plugin.nuget_update_all"),
+    shell_commands = {"dotnet list package --outdated", "dotnet add <project name> package <package name> --version <package version>"},
+    description = "Update all installed Nuget packages",
+  },
+
+  {
     name = ".NET Add Project References",
     command = require("dotnet-plugin.reference_add"),
     shell_commands = {"dotnet sln list", "dotnet list %s reference", "dotnet add <project name> reference <reference name>", "dotnet restore"},
