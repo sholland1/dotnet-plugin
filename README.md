@@ -1,5 +1,7 @@
 # .NET Commands plugin
 
+A Neovim plugin that provides convenient commands for managing .NET projects, solutions, and packages.
+
 ## Features
 
 - [x] Nuget Packages - add, update, remove
@@ -10,10 +12,10 @@
 - [x] Previews
 - [x] List available commands
 - [x] Powershell, sh
-- [ ] Other nuget sources
 - [x] Update all nuget packages command
 - [ ] Add package, choose version
 - [ ] Update single package, choose version
+- [ ] Other nuget sources
 - [ ] New project, choose target framework
 - [ ] New project, choose language
 - [ ] Handle fsproj and vbproj
@@ -88,10 +90,11 @@ end
 
 ## Dependencies
 
-dotnet
+- .NET SDK (dotnet)
+- telescope.nvim
 
-### Linux shell commands
-cd, curl, dirname, find, git ls-files, popd, pushd, realpath, sed, sort, tail, xargs
+### Required shell commands (Linux)
+cd, curl, dirname, find, git, ls-files, popd, pushd, realpath, sed, sort, tail, xargs
 
 ## Other .NET Neovim plugins
 
