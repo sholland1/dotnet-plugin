@@ -29,7 +29,7 @@ local update_package = function(opts)
           id = pkg.id,
           resolvedVersion = pkg.resolvedVersion,
           latestVersion = pkg.latestVersion,
-          projectPath = project.path,
+          projectPath = string.format("'%s'", project.path),
         })
       end
     end

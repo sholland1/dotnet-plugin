@@ -28,7 +28,7 @@ local remove_package = function(opts)
           filename = filename,
           id = pkg.id,
           resolvedVersion = pkg.resolvedVersion,
-          projectPath = project.path,
+          projectPath = string.format("'%s'", project.path),
         })
       end
     end

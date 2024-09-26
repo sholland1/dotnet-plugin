@@ -17,7 +17,7 @@ local update_all_packages = function()
         table.insert(results, {
           id = pkg.id,
           latestVersion = pkg.latestVersion,
-          projectPath = project.path,
+          projectPath = string.format("'%s'", project.path),
         })
       end
     end
